@@ -5,13 +5,15 @@
 @Email: johnjim0816@gmail.com
 @Date: 2020-05-21 23:36:58
 @LastEditor: John
-@LastEditTime: 2020-05-22 14:53:12
+@LastEditTime: 2020-05-23 16:22:37
 @Discription: 
 @Environment: python 3.7.7
 '''
 import numpy as np
 from struct import unpack
 import gzip
+import os
+
 
 def __read_image(path):
     with gzip.open(path, 'rb') as f:
@@ -52,7 +54,7 @@ def __one_hot_label(label):
     return lab
 
 
-def load_local_mnist(x_train_path, y_train_path, x_test_path, y_test_path, normalize=True, one_hot=True):
+def load_local_mnist(x_train_path=os.path.dirname(__file__)+'/train-images-idx3-ubyte.gz', y_train_path=os.path.dirname(__file__)+'/train-labels-idx1-ubyte.gz', x_test_path=os.path.dirname(__file__)+'/t10k-images-idx3-ubyte.gz', y_test_path=os.path.dirname(__file__)+'/t10k-labels-idx1-ubyte.gz', normalize=True, one_hot=True):
     '''load_mnist 读取.gz格式的MNIST数据集
     Args:
         x_train_path ([type]): [description]
@@ -64,7 +66,7 @@ def load_local_mnist(x_train_path, y_train_path, x_test_path, y_test_path, norma
                                   one-hot数组是指[0,0,1,0,0,0,0,0,0,0]这样的数组
     Returns:
         [type]: (训练图像, 训练标签), (测试图像, 测试标签)
-    '''    
+    '''
     image = {
         'train': __read_image(x_train_path),
         'test': __read_image(x_test_path)
@@ -84,8 +86,6 @@ def load_local_mnist(x_train_path, y_train_path, x_test_path, y_test_path, norma
             label[key] = __one_hot_label(label[key])
 
     return (image['train'], label['train']), (image['test'], label['test'])
-
-
 
 
 
@@ -113,10 +113,4 @@ def load_online_data():  # categorical_crossentropy
 
 if __name__ == "__main__":
 
-    x_train_path = './train-images-idx3-ubyte.gz'
-    y_train_path = './train-labels-idx1-ubyte.gz'
-    x_test_path = './t10k-images-idx3-ubyte.gz'
-    y_test_path = './t10k-labels-idx1-ubyte.gz'
-
-    (x_train, y_train), (x_test, y_test) = load_local_mnist(
-        x_train_path, y_train_path, x_test_path, y_test_path)
+    (x_train, y_train), (x_test, y_test) = load_local_mnist()
