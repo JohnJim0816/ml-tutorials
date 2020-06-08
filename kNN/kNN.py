@@ -5,12 +5,11 @@
 @Email: johnjim0816@gmail.com
 @Date: 2020-05-22 10:55:13
 @LastEditor: John
-@LastEditTime: 2020-05-23 16:21:19
+@LastEditTime: 2020-06-08 20:42:24
 @Discription:
 @Environment: python 3.7.7
 '''
 # 参考https://github.com/Dod-o/Statistical-Learning-Method_Code/blob/master/KNN/KNN.py
-# kNN的大头在于向量的计算，考虑采用tensorflow
 
 '''
 数据集：Mnist
@@ -20,7 +19,7 @@
 运行机器：CPU i7-9750H
 超参数：k=25
 运行结果：
-向量距离使用算法——欧式距离
+向量距离使用算法——L2欧式距离
     正确率：0.9698
     运行时长：266.36s
 '''
@@ -30,20 +29,20 @@ import numpy as np
 import sys
 import os
 
-'''start导入处于不同目录下的Mnist.load_data'''
-parent_path=os.path.dirname(os.path.dirname(__file__)) # 获取上级目录
+# 导入处于不同目录下的Mnist.load_data
+parent_path=os.path.dirname(os.path.dirname(sys.argv[0])) # 获取上级目录
 sys.path.append(parent_path) # 修改sys.path
 from Mnist.load_data import load_local_mnist
-'''导入处于不同目录下的Mnist.load_data'''
+
 
 class KNN:
     def __init__(self, x_train, y_train, x_test, y_test, k):
         '''
         Args:
-            x_train [Array]: data of training set
-            y_train [Array]: labels of traning set
-            x_test [Array]: data of testing set
-            y_test [Array]: labels of testing set
+            x_train [Array]: 训练集数据
+            y_train [Array]: 训练集标签
+            x_test [Array]: 测试集数据
+            y_test [Array]: 测试集标签
             k [int]: k of kNN
         '''
         self.x_train, self.y_train = x_train, y_train
@@ -68,7 +67,6 @@ class KNN:
         预测样本x的标记。
         获取方式通过找到与样本x最近的topK个点，并查看它们的标签。
         查找里面占某类标签最多的那类标签
-        （书中3.1 3.2节）
         :param trainDataMat:训练集数据集
         :param trainLabelMat:训练集标签集
         :param x:待预测的样本x
@@ -96,7 +94,7 @@ class KNN:
         return k_nearest_index
 
 
-    def y_predict(self,k_nearest_index):
+    def _predict_y(self,k_nearest_index):
         # label_list[1]=3，表示label为1的样本数有3个，由于此处label为0-9，可以初始化长度为10的label_list
         label_list=[0] * 10
         for index in k_nearest_index:
@@ -107,7 +105,7 @@ class KNN:
         y_predict=label_list.index(max(label_list))
         return y_predict
 
-    def model_test(self,n_test=200):
+    def test(self,n_test=200):
         '''
         测试正确率
         :param: n_test: 待测试的样本数
@@ -120,7 +118,6 @@ class KNN:
         # 遍历测试集，对每个测试集样本进行测试
         # 由于计算向量与向量之间的时间耗费太大，测试集有6000个样本，所以这里人为改成了
         # 测试200个样本点，若要全跑，更改n_test即可
-        # for i in range(len(testDataMat)):
         for i in range(n_test):
             # print('test %d:%d'%(i, len(trainDataArr)))
             print('test %d:%d' % (i, n_test))
@@ -129,7 +126,7 @@ class KNN:
             # 获取距离最近的训练样本序号
             k_nearest_index=self._get_k_nearest(x)
             # 预测输出y
-            y=self.y_predict(k_nearest_index)
+            y=self._predict_y(k_nearest_index)
             # 如果预测label与实际label不符，错误值计数加1
             if y != np.argmax(self.y_test[i]):
                 error_count += 1
@@ -144,8 +141,8 @@ if __name__ == "__main__":
     k=25
     start = time.time()
     (x_train, y_train), (x_test, y_test) = load_local_mnist()
-    ML=KNN( x_train, y_train, x_test, y_test,k)
-    accur=ML.model_test()
+    model=KNN( x_train, y_train, x_test, y_test,k)
+    accur=model.test()
     end = time.time()
     print("total acc:",accur)
     print('time span:', end - start)

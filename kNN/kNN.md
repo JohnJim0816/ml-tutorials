@@ -6,8 +6,6 @@ kNN中需要考虑两点：
 * 距离的计算方式，通常采用欧式距离，也有马氏距离等
 
 
-
-
 ## 伪代码
 
 > 抽空重写
@@ -31,7 +29,7 @@ kNN中需要考虑两点：
 
 机器学习实战
 
-
+[李航](https://github.com/SmirkCao/Lihang/tree/master/CH03)
 
 
 

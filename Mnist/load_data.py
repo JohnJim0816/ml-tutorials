@@ -5,9 +5,13 @@
 @Email: johnjim0816@gmail.com
 @Date: 2020-05-21 23:36:58
 @LastEditor: John
-@LastEditTime: 2020-05-23 16:22:37
+@LastEditTime: 2020-06-07 10:34:19
 @Discription: 
 @Environment: python 3.7.7
+'''
+'''
+此脚本提供两种方法，一种为load_local_mnist，即将本地的.gz文件解码为数据，
+一种是利用keras在线下载mnist
 '''
 import numpy as np
 from struct import unpack
@@ -66,6 +70,7 @@ def load_local_mnist(x_train_path=os.path.dirname(__file__)+'/train-images-idx3-
                                   one-hot数组是指[0,0,1,0,0,0,0,0,0,0]这样的数组
     Returns:
         [type]: (训练图像, 训练标签), (测试图像, 测试标签)
+        训练集数量为60000，每行包含维度为784=28*28的向量
     '''
     image = {
         'train': __read_image(x_train_path),

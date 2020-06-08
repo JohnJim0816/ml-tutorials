@@ -1,8 +1,11 @@
-kNN
+kNN ok
 
 决策树
 
-逻辑回归
+逻辑回归 ok
+
+最大熵模型
+
 SVM
 
 贝叶斯
@@ -10,11 +13,19 @@ SVM
 感知机
 
 
-## kNN
-笔记另存
-代码简单，有空重写
-## Decision Tree
+
+
+
+
 
 ## Refs
 
+
+统计学习方法
+西瓜书
+机器学习实战
+
+
 [github-Dod-o](https://github.com/Dod-o/Statistical-Learning-Method_Code)
+
+https://github.com/fengdu78/lihang-code
