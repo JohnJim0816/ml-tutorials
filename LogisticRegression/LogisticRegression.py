@@ -5,7 +5,7 @@
 @Email: johnjim0816@gmail.com
 @Date: 2020-06-06 17:26:50
 @LastEditor: John
-@LastEditTime: 2020-06-09 01:04:35
+@LastEditTime: 2020-07-09 15:06:51
 @Discription: 
 @Environment: python 3.7.7
 '''
@@ -38,7 +38,6 @@ class LogisticRegression:
             y_train [Array]: 训练集标签
             x_test [Array]: 测试集数据
             y_test [Array]: 测试集标签
-            k [int]: k of kNN
         '''
         self.x_train, self.y_train = x_train, y_train
         self.x_test, self.y_test = x_test, y_test
@@ -50,13 +49,17 @@ class LogisticRegression:
         # theta表示模型的参数，即w和b
         self.theta=np.mat(np.zeros(len(x_train[0])))
         # 设置学习率
-        self.lr=0.001
+        self.lr=0.001 # TODO 可以设置学习率优化，使用Adam等optimizier
         # 设置迭代次数
         self.n_iters=10
     @staticmethod
     def sigmoid(x):
+        '''定义sigmoid函数，即激活函数
+        '''
         return 1.0/(1+np.exp(-x))
+        
     def _predict(self,x_test_mat):
+        
         P1=self.sigmoid(np.dot(x_test_mat, self.theta.T))
         #如果为1的概率大于0.5，返回1
         if P1 >= 0.5:
@@ -65,6 +68,8 @@ class LogisticRegression:
         return 0
 
     def train(self):
+        '''训练过程，可参考伪代码
+        '''
         for i_iter in range(self.n_iters):
             for n in range(len(self.x_train)):
                 result = self.sigmoid(np.dot(self.x_train_mat[n], self.theta.T))
@@ -95,11 +100,9 @@ class LogisticRegression:
             print("accuracy=",1 - (error_count /(n+1)))
         #返回准确率
         return 1 - error_count / len(self.x_test)
-        
 
-if __name__ == "__main__":
-    start = time.time()
-    # 加载数据集
+def normalized_dataset():
+    # 加载数据集，one_hot=False意思是输出标签为数字形式，比如3而不是[0,0,0,1,0,0,0,0,0,0]
     (x_train, y_train), (x_test, y_test) = load_local_mnist(one_hot=False)
 
     # 将w和b结合在一起，因此训练数据增加一维
@@ -115,10 +118,16 @@ if __name__ == "__main__":
     # 看来如果样本标签比较杂的话，对于是否能有效地划分超平面确实存在很大影响
     y_train_modified=np.array([1 if y_train[i]==1 else 0 for i in range(len(y_train))])
     y_test_modified=np.array([1 if y_test[i]==1 else 0 for i in range(len(y_test))])
+    return x_train_modified,y_train_modified,x_test_modified,y_test_modified
 
+if __name__ == "__main__":
+    train = False # 是否训练
+    start = time.time()   
+    x_train_modified,y_train_modified,x_test_modified,y_test_modified = normalized_dataset()
     model=LogisticRegression(x_train_modified,y_train_modified,x_test_modified,y_test_modified)
-    model.train()
-    model.save()
+    if train:
+        model.train()
+        model.save()
     model.load()
     accur=model.test()
     end = time.time()

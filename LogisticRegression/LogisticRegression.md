@@ -2,11 +2,11 @@
 考虑二分类任务，即$y_i\in{\{0,1\}},i=1,2,...$, 
 
 ## 假设函数(Hypothesis function)
-假设函数如下：
+假设函数就是其基本模型，如下：
 $$
 h_{\theta}(x)=g(\theta^{T}x)
 $$
-其中$\theta^{T}x=w^Tx+b$, 而$g(z)=1/(1+e^-z)$为$sigmoid$函数，也称激活函数。
+其中$\theta^{T}x=w^Tx+b$, 而$g(z)=\frac{1}{1+e^{-z}}$为$sigmoid$函数，也称激活函数。
 
 ## 损失函数
 
@@ -58,6 +58,29 @@ $$
 \frac{-\partial \ell(\boldsymbol{\theta})}{\partial \boldsymbol{\theta}}=\sum_{i=1}(y_ix_i-\frac{e^{\theta^Tx_i}x_i}{1+e^{\theta^Tx_i}})=\sum_{i=1}x_i(y_i-h_\theta(x_i))=\sum_{i=1}x_i*error
 $$
 
+## 伪代码
+
+训练算法如下：
+
+* 输入：训练数据$X=\{x_1,x_2,...,x_n\}$,训练标签$Y=\{y_1,y_2,...,\}$，注意均为矩阵形式
+
+* 输出: 训练好的模型参数$\theta$，或者$h_{\theta}(x)$
+
+* 初始化模型参数$\theta$，迭代次数$n\_iters$，学习率$\eta$
+
+* $\mathbf{FOR} \  i\_iter \  \mathrm{in \ range}(n\_iters)$
+
+  * $\mathbf{FOR} \  i \  \mathrm{in \ range}(n)$     &emsp;&emsp;$\rightarrow n=len(X)$
+
+    * $error=y_i-h_{\theta}(x_i)$
+    * $grad=error*x_i$
+    * $\theta \leftarrow \theta + \eta*grad$          &emsp;&emsp;$\rightarrow$梯度上升
+    * $\mathbf{END \ FOR}$
+  
+* $\mathbf{END \ FOR}$
+  
+
 ## Refs
+
 西瓜书
 李宏毅笔记
