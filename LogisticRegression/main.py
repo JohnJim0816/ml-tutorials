@@ -5,7 +5,7 @@
 @Email: johnjim0816@gmail.com
 @Date: 2020-06-06 17:26:50
 @LastEditor: John
-@LastEditTime: 2020-07-09 15:06:51
+LastEditTime: 2021-04-08 00:55:29
 @Discription: 
 @Environment: python 3.7.7
 '''
@@ -20,14 +20,13 @@
     正确率：0.9933
     运行时长：29.93s
 '''
+import sys,os
+curr_path = os.path.dirname(__file__)
+parent_path=os.path.dirname(curr_path) 
+sys.path.append(parent_path) # add current terminal path to sys.path
+
 import numpy as np
 import time
-
-# 导入处于不同目录下的Mnist.load_data
-import os 
-import sys
-parent_path=os.path.dirname(os.path.dirname(sys.argv[0])) # 获取上级目录
-sys.path.append(parent_path) # 修改sys.path
 from Mnist.load_data import load_local_mnist
 
 class LogisticRegression:
@@ -48,25 +47,19 @@ class LogisticRegression:
             self.y_test).T, np.mat(self.y_test).T
         # theta表示模型的参数，即w和b
         self.theta=np.mat(np.zeros(len(x_train[0])))
-        # 设置学习率
-        self.lr=0.001 # TODO 可以设置学习率优化，使用Adam等optimizier
-        # 设置迭代次数
-        self.n_iters=10
+        self.lr=0.001 # 可以设置学习率优化，使用Adam等optimizier
+        self.n_iters=10  # 设置迭代次数
     @staticmethod
     def sigmoid(x):
-        '''定义sigmoid函数，即激活函数
+        '''sigmoid function
         '''
         return 1.0/(1+np.exp(-x))
         
     def _predict(self,x_test_mat):
-        
-        P1=self.sigmoid(np.dot(x_test_mat, self.theta.T))
-        #如果为1的概率大于0.5，返回1
-        if P1 >= 0.5:
+        P=self.sigmoid(np.dot(x_test_mat, self.theta.T))
+        if P >= 0.5:
             return 1
-        #否则返回0
         return 0
-
     def train(self):
         '''训练过程，可参考伪代码
         '''
@@ -81,8 +74,6 @@ class LogisticRegression:
     def save(self):
         '''保存模型参数到本地文件
         '''
-        import os 
-        import sys
         np.save(os.path.dirname(sys.argv[0])+"/theta.npy",self.theta)
     def load(self):
         import os 
@@ -121,13 +112,11 @@ def normalized_dataset():
     return x_train_modified,y_train_modified,x_test_modified,y_test_modified
 
 if __name__ == "__main__":
-    train = False # 是否训练
     start = time.time()   
     x_train_modified,y_train_modified,x_test_modified,y_test_modified = normalized_dataset()
     model=LogisticRegression(x_train_modified,y_train_modified,x_test_modified,y_test_modified)
-    if train:
-        model.train()
-        model.save()
+    model.train()
+    model.save()
     model.load()
     accur=model.test()
     end = time.time()
