@@ -5,7 +5,7 @@
 @Email: johnjim0816@gmail.com
 @Date: 2020-06-06 17:26:50
 @LastEditor: John
-LastEditTime: 2021-04-08 00:55:29
+LastEditTime: 2021-04-08 00:56:08
 @Discription: 
 @Environment: python 3.7.7
 '''
@@ -95,14 +95,11 @@ class LogisticRegression:
 def normalized_dataset():
     # 加载数据集，one_hot=False意思是输出标签为数字形式，比如3而不是[0,0,0,1,0,0,0,0,0,0]
     (x_train, y_train), (x_test, y_test) = load_local_mnist(one_hot=False)
-
     # 将w和b结合在一起，因此训练数据增加一维
     ones_col=[[1] for i in range(len(x_train))] # 生成全为1的二维嵌套列表，即[[1],[1],...,[1]]
     x_train_modified=np.append(x_train,ones_col,axis=1)
-
     ones_col=[[1] for i in range(len(x_test))] # 生成全为1的二维嵌套列表，即[[1],[1],...,[1]]
     x_test_modified=np.append(x_test,ones_col,axis=1)
-
     # Mnsit有0-9是个标记，由于是二分类任务，所以将标记0的作为1，其余为0
     # 验证过<5为1 >5为0时正确率在90%左右，猜测是因为数多了以后，可能不同数的特征较乱，不能有效地计算出一个合理的超平面
     # 查看了一下之前感知机的结果，以5为分界时正确率81，重新修改为0和其余数时正确率98.91%
